@@ -1,0 +1,1633 @@
+<!doctype html>
+<html lang="en">
+ <head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VICAH Scholar - AI-Powered Learning Platform</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+    
+    :root {
+      --primary: #6366f1;
+      --secondary: #ec4899;
+      --accent: #f59e0b;
+      --dark: #0f172a;
+      --light: #f8fafc;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+    
+    .glass-effect {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #6366f1, #ec4899, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glow-effect {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), inset 0 0 20px rgba(99, 102, 241, 0.1);
+    }
+    
+    .btn-premium {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      transition: all 0.3s ease;
+      border: none;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .btn-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-premium:active {
+      transform: translateY(0);
+    }
+    
+    .card-premium {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .card-premium:hover {
+      border-color: rgba(99, 102, 241, 0.6);
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+      transform: translateY(-4px);
+    }
+    
+    .animate-pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+    }
+    
+    .slide-in { animation: slideIn 0.5s ease-out; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .achievement-badge {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .streak-counter {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .level-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      display: inline-block;
+    }
+    .level-easy {
+      background: linear-gradient(135deg, #3b82f6, #2563eb); /* blue */
+      color: white;
+    }
+    .level-intermediate {
+      background: linear-gradient(135deg, #f59e0b, #fb923c); /* orange */
+      color: white;
+    }
+    .level-hard {
+      background: linear-gradient(135deg, #ef4444, #dc2626); /* red */
+      color: white;
+    }
+    
+    .chat-bubble-ai {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+      border-left: 3px solid #6366f1;
+    }
+    
+    .chat-bubble-user {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(244, 63, 94, 0.2));
+      border-right: 3px solid #ec4899;
+    }
+    
+    .progress-ring {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    
+    .leaderboard-rank { font-weight: 800; font-size: 20px; color: #fbbf24; }
+    
+    .difficulty-easy { color: #10b981; }
+    .difficulty-medium { color: #f59e0b; }
+    .difficulty-hard { color: #ef4444; }
+    /* Toast notifications */
+    #toast-container {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 180px;
+      max-width: 320px;
+      background: rgba(17,24,39,0.95);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .toast.success { background: linear-gradient(90deg,#10b981,#06b6d4); }
+    .toast.info { background: linear-gradient(90deg,#3b82f6,#6366f1); }
+    .toast.warn { background: linear-gradient(90deg,#f59e0b,#fb923c); }
+    .toast .close {
+      margin-left: 12px;
+      cursor: pointer;
+      opacity: 0.9;
+    }
+    /* Mobile-specific adjustments: remove heavy blur and scale down sizes */
+    @media (max-width: 640px) {
+      html, body { font-size: 14px; }
+      /* Disable backdrop blur for better performance and readability on mobile */
+      .glass-effect {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(15, 23, 42, 0.92) !important;
+        border: 1px solid rgba(148, 163, 184, 0.06) !important;
+      }
+      /* Make large headings and containers fit better on small screens */
+      h1.text-5xl { font-size: 2rem; line-height: 1.1; }
+      .text-4xl { font-size: 1.5rem; }
+      .max-w-7xl, .max-w-6xl, .max-w-2xl, .max-w-md { max-width: 100% !important; padding-left: 12px; padding-right: 12px; }
+      /* Ensure images and avatars scale responsively */
+      img { max-width: 100% !important; height: auto !important; }
+      /* Reduce some element paddings for compact display */
+      .p-6 { padding: 12px !important; }
+      .p-4 { padding: 10px !important; }
+      .p-3 { padding: 8px !important; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body>
+  <div id="app" class="w-full h-full overflow-auto"></div>
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+  <script>
+    // App State Management
+    let appState = {
+      currentScreen: 'welcome',
+      user: {
+        name: 'Chukwuma Frank',
+        email: '',
+        password: '',
+        avatar: null,
+        references: [],
+        level: 1,
+        totalXP: 12,
+        streak: 10,
+        courses: ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'Computer Science', 'Economics'],
+        selectedCourse: null,
+        selectedTopic: null,
+        completedTopics: ['Newton\'s Laws', 'Kinematics', 'Energy'],
+        quizzes: [
+          { course: 'Physics', score: 79, date: '2024-01-15' },
+          { course: 'Mathematics', score: 92, date: '2024-01-14' },
+          { course: 'Chemistry', score: 61, date: '2024-01-13' }
+        ],
+        achievements: ['First Steps', 'Quiz Master', '7-Day Streak', 'Quick Learner', 'Science Enthusiast'],
+        strengths: ['Mechanics', 'Algebra', 'Stoichiometry'],
+        weaknesses: ['Organic Chemistry', 'Calculus'],
+        dailyGoal: { target: 120, current: 85 }
+      },
+      settings: {
+        includeSources: true
+      },
+      chatHistory: [],
+      currentQuiz: null,
+      quizAnswers: {}
+    };
+
+      // Persistence helpers
+      function saveState() {
+        try {
+          localStorage.setItem('cfa_app_state', JSON.stringify(appState));
+        } catch (e) { console.error('saveState error', e); }
+      }
+      
+        // Email config helpers
+        function loadEmailConfig() { try { return JSON.parse(localStorage.getItem('vica_email_config') || '{}'); } catch (e) { return {}; } }
+        function saveEmailConfig(cfg) { try { localStorage.setItem('vica_email_config', JSON.stringify(cfg)); return true; } catch (e) { return false; } }
+      
+        // Attempt to send recovery email via configured provider or EmailJS fallback
+        async function sendRecoveryEmail(email, code) {
+          const cfg = loadEmailConfig();
+          // prefer an API endpoint
+          if (cfg && cfg.apiEndpoint) {
+            try {
+              const resp = await fetch(cfg.apiEndpoint, { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ to: email, code }) });
+              if (resp.ok) return true;
+            } catch (e) { console.error('sendRecoveryEmail api error', e); }
+          }
+          // fallback: emailjs if configured
+          if (cfg && cfg.emailjs && cfg.emailjs.service_id && cfg.emailjs.template_id && cfg.emailjs.user_id) {
+            try {
+              await loadEmailJsSdk();
+              const templateParams = { to_email: email, code };
+              const res = await emailjs.send(cfg.emailjs.service_id, cfg.emailjs.template_id, templateParams, cfg.emailjs.user_id);
+              return !!res;
+            } catch (e) { console.error('emailjs send error', e); }
+          }
+          return false;
+        }
+      
+        function loadEmailJsSdk() {
+          return new Promise((resolve, reject) => {
+            if (window.emailjs) return resolve(window.emailjs);
+            const s = document.createElement('script');
+            s.src = 'https://cdn.emailjs.com/sdk/2.3.2/email.min.js';
+            s.onload = () => { try { window.emailjs.init = window.emailjs.init || function(){}; resolve(window.emailjs); } catch (e) { resolve(window.emailjs); } };
+            s.onerror = () => reject(new Error('Failed to load emailjs'));
+            document.head.appendChild(s);
+          });
+        }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem('cfa_app_state');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            // merge parsed values into appState.user where appropriate
+            if (parsed.user) appState.user = Object.assign(appState.user, parsed.user);
+          }
+        } catch (e) { console.error('loadState error', e); }
+      }
+
+      // Multi-user helpers: store users under 'vica_user_store' in localStorage
+      function loadUserStore() {
+        try { return JSON.parse(localStorage.getItem('vica_user_store') || '{}'); } catch (e) { return {}; }
+      }
+      function saveUserStore(store) { try { localStorage.setItem('vica_user_store', JSON.stringify(store)); } catch (e) { console.error('saveUserStore', e); } }
+      function saveCurrentUserToStore() {
+        try {
+          const email = (appState.user && appState.user.email) ? appState.user.email.trim().toLowerCase() : '';
+          if (!email) return;
+          const store = loadUserStore();
+          store[email] = Object.assign({}, appState.user);
+          saveUserStore(store);
+        } catch (e) { console.error('saveCurrentUserToStore', e); }
+      }
+
+      // auth UI state
+      let authFlow = 'signin'; // 'signin' | 'signup' | 'recover'
+      let recoverEmail = '';
+
+      // Study session tracking
+      function startStudySession() {
+        if (!appState.studySession) {
+          const start = Date.now();
+          appState.studySession = { start, topic: appState.user.selectedTopic, accumulatedTicks: 0 };
+          // start a page-level interval to increment progress each minute
+          try {
+            if (window._studyInterval) { clearInterval(window._studyInterval); window._studyInterval = null; }
+            window._studyInterval = setInterval(() => {
+              try {
+                appState.user.dailyGoal = appState.user.dailyGoal || { target: 120, current: 0 };
+                const target = appState.user.dailyGoal.target || 120;
+                const current = appState.user.dailyGoal.current || 0;
+                if (current >= target) {
+                  // reached target — stop ticking
+                  if (window._studyInterval) { clearInterval(window._studyInterval); window._studyInterval = null; }
+                  return;
+                }
+                // increment by one minute (cap at target)
+                appState.user.dailyGoal.current = Math.min(target, current + 1);
+                appState.user.totalXP = (appState.user.totalXP || 0) + 1;
+                appState.studySession.accumulatedTicks = (appState.studySession.accumulatedTicks || 0) + 1;
+                saveState();
+                render();
+                if (appState.user.dailyGoal.current >= target) {
+                  try { showToast('Daily goal reached! Great work.', 'success'); } catch (e) {}
+                  if (window._studyInterval) { clearInterval(window._studyInterval); window._studyInterval = null; }
+                }
+              } catch (e) { console.error('study tick error', e); }
+            }, 60000);
+          } catch (e) { console.error('startStudySession interval error', e); }
+          saveState();
+        }
+      }
+
+      function endStudySession() {
+        if (appState.studySession && appState.studySession.start) {
+          // stop ticking interval if running
+          try { if (window._studyInterval) { clearInterval(window._studyInterval); window._studyInterval = null; } } catch (e) {}
+          const totalMins = Math.max(1, Math.round((Date.now() - appState.studySession.start) / 60000));
+          const accounted = appState.studySession.accumulatedTicks || 0;
+          const remainder = Math.max(0, totalMins - accounted);
+          // award XP and dailyGoal for any remaining minutes not covered by ticks
+          if (remainder > 0) {
+            appState.user.dailyGoal = appState.user.dailyGoal || { target: 120, current: 0 };
+            const target = appState.user.dailyGoal.target || 120;
+            const prev = appState.user.dailyGoal.current || 0;
+            const updated = Math.min(target, prev + remainder);
+            appState.user.dailyGoal.current = updated;
+            appState.user.totalXP = (appState.user.totalXP || 0) + remainder;
+            if (prev < target && updated >= target) {
+              try { showToast('Daily goal reached! Great work.', 'success'); } catch (e) {}
+            }
+          }
+          // record activity
+          appState.user.completedTopics = appState.user.completedTopics || [];
+          if (appState.studySession.topic && !appState.user.completedTopics.includes(appState.studySession.topic)) {
+            appState.user.completedTopics.push(appState.studySession.topic);
+          }
+          appState.studySession = null;
+          saveState();
+          showToast(`${totalMins} XP earned for studying`, 'success');
+        }
+      }
+
+      // Daily streak handling (per-user, only when signed in)
+      function updateDailyStreak() {
+        try {
+          // Only update streak for signed-in users
+          const email = (appState.user && appState.user.email) ? appState.user.email.trim().toLowerCase() : null;
+          if (!email) return; // skip streak logic for anonymous/unsigned users
+          const key = 'cfa_last_active_' + email;
+          const last = localStorage.getItem(key);
+          const today = new Date();
+          const todayStr = today.toISOString().slice(0,10);
+          if (last === todayStr) return; // already updated today
+
+          // New day detected — reset the daily goal progress to 0 minutes
+          appState.user.dailyGoal = appState.user.dailyGoal || { target: 120, current: 0 };
+          if ((appState.user.dailyGoal.current || 0) !== 0) {
+            appState.user.dailyGoal.current = 0;
+            saveState();
+            try { showToast('Daily goal reset to 0 min for the new day', 'info'); } catch (e) {}
+          }
+
+          // Archive previous day's quizzes to keep the UI clean (preserve history)
+          if (appState.user.quizzes && appState.user.quizzes.length) {
+            appState.user.quizArchive = appState.user.quizArchive || [];
+            appState.user.quizArchive.push({ date: todayStr, quizzes: appState.user.quizzes.slice(), archivedAt: new Date().toISOString() });
+            appState.user.quizzes = [];
+            saveState();
+            try { showToast('Archived yesterday\'s quizzes', 'info'); } catch (e) {}
+          }
+
+          let diffDays = 0;
+          if (!last) {
+            // first run for this key => start the streak at 1
+            appState.user.streak = 1;
+          } else {
+            const lastDate = new Date(last + 'T00:00:00');
+            diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+              appState.user.streak = (appState.user.streak || 0) + 1;
+            } else {
+              // missed one or more days -> reset to 0
+              appState.user.streak = 0;
+            }
+          }
+          localStorage.setItem(key, todayStr);
+          saveState();
+          // notify user about streak change
+          if (diffDays === 1) {
+            showToast(`Streak increased to ${appState.user.streak}`, 'info');
+          } else if (diffDays > 1) {
+            showToast('Streak reset to 0 (you missed a day)', 'warn');
+          }
+        } catch (e) { console.error('updateDailyStreak error', e); }
+      }
+
+      // load persisted state on startup
+      loadState();
+      // update streak on startup
+      updateDailyStreak();
+      // Reset daily goal now (requested) and persist
+      (function(){
+        appState.user.dailyGoal = appState.user.dailyGoal || { target: 120, current: 0 };
+        if ((appState.user.dailyGoal.current || 0) !== 0) {
+          appState.user.dailyGoal.current = 0;
+          saveState();
+          try { showToast('Daily goal reset to 0 min', 'info'); } catch (e) {}
+        }
+      })();
+
+    const topicsByCoursae = {
+      'Physics': [
+        { name: 'Newton\'s Laws', duration: '10-15', level: 'Easy' },
+        { name: 'Kinematics', duration: '20-30', level: 'Intermediate' },
+        { name: 'Energy & Work', duration: '8-10', level: 'Easy' },
+        { name: 'Thermodynamics', duration: '20-30', level: 'Hard' },
+        { name: 'Waves & Sound', duration: '8-10', level: 'Intermediate' },
+        { name: 'Electricity & Magnetism', duration: '20-30', level: 'Hard' },
+        { name: 'Sound & Light', duration: '10-15', level: 'Easy' },
+        { name: 'Modern Physics', duration: '20-30', level: 'Hard' }
+      ],
+      'Mathematics': [
+        { name: 'Algebra', duration: '8-10', level: 'Easy' },
+        { name: 'Geometry', duration: '10-15', level: 'Intermediate' },
+        { name: 'Calculus', duration: '20-30', level: 'Hard' },
+        { name: 'Statistics', duration: '10-15', level: 'Intermediate' },
+        { name: 'Trigonometry', duration: '8-10', level: 'Easy' },
+        { name: 'Linear Algebra', duration: '20-30', level: 'Hard' }
+      ],
+      'Chemistry': [
+        { name: 'Atomic Structure', duration: '8-10', level: 'Easy' },
+        { name: 'Bonding', duration: '10-15', level: 'Intermediate' },
+        { name: 'Stoichiometry', duration: '20-30', level: 'Hard' },
+        { name: 'Organic Chemistry', duration: '20-30', level: 'Hard' },
+        { name: 'Equilibrium', duration: '10-15', level: 'Intermediate' },
+        { name: 'Thermochemistry', duration: '20-30', level: 'Hard' }
+      ],
+      'Biology': [
+        { name: 'Cell Biology', duration: '8-10', level: 'Easy' },
+        { name: 'Genetics', duration: '10-15', level: 'Intermediate' },
+        { name: 'Evolution', duration: '10-15', level: 'Intermediate' },
+        { name: 'Ecology', duration: '20-30', level: 'Hard' },
+        { name: 'Human Anatomy', duration: '20-30', level: 'Hard' },
+        { name: 'Photosynthesis', duration: '8-10', level: 'Easy' }
+      ],
+      'Computer Science': [
+        { name: 'Data Structures', duration: '20-30', level: 'Hard' },
+        { name: 'Algorithms', duration: '20-30', level: 'Hard' },
+        { name: 'OOP', duration: '10-15', level: 'Intermediate' },
+        { name: 'Databases', duration: '10-15', level: 'Intermediate' },
+        { name: 'Web Development', duration: '8-10', level: 'Easy' },
+        { name: 'AI/ML', duration: '20-30', level: 'Hard' }
+      ],
+      'Economics': [
+        { name: 'Microeconomics', duration: '10-15', level: 'Intermediate' },
+        { name: 'Macroeconomics', duration: '20-30', level: 'Hard' },
+        { name: 'Supply & Demand', duration: '8-10', level: 'Easy' },
+        { name: 'Inflation', duration: '8-10', level: 'Easy' },
+        { name: 'GDP', duration: '10-15', level: 'Intermediate' },
+        { name: 'Trade', duration: '10-15', level: 'Intermediate' }
+      ]
+    };
+
+    // Initialize App
+    window.elementSdk?.init({
+      defaultConfig: { app_title: 'VICAH Scholar', welcome_message: 'Master Any Subject with AI' },
+      onConfigChange: async (config) => {
+        render();
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['app_title', config.app_title || 'VICAH Scholar'],
+        ['welcome_message', config.welcome_message || 'Master Any Subject with AI']
+      ])
+    });
+
+    // Screen Renderers
+    function renderWelcome() {
+      return `
+        <div class="w-full h-full flex items-center justify-center p-6 slide-in">
+          <div class="max-w-md w-full">
+            <div class="text-center mb-8">
+              <div class="w-24 h-24 mx-auto mb-6 rounded-full glass-effect flex items-center justify-center glow-effect">
+                <i data-lucide="brain" style="width: 48px; height: 48px; color: #6366f1;"></i>
+              </div>
+              <h1 class="text-5xl font-black gradient-text mb-2">VICAH Scholar</h1>
+              <p class="text-xl text-slate-300 font-light">Master Any Subject with AI</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+              <div class="glass-effect p-4 rounded-lg flex items-center gap-3 card-premium">
+                <i data-lucide="zap" style="color: #f59e0b;"></i>
+                <span class="text-sm">AI-Powered Explanations</span>
+              </div>
+              <div class="glass-effect p-4 rounded-lg flex items-center gap-3 card-premium">
+                <i data-lucide="award" style="color: #ec4899;"></i>
+                <span class="text-sm">Gamified Learning</span>
+              </div>
+              <div class="glass-effect p-4 rounded-lg flex items-center gap-3 card-premium">
+                <i data-lucide="target" style="color: #3b82f6;"></i>
+                <span class="text-sm">Personalized Progress</span>
+              </div>
+              <div class="glass-effect p-4 rounded-lg flex items-center gap-3 card-premium">
+                <i data-lucide="trending-up" style="color: #10b981;"></i>
+                <span class="text-sm">Real-time Analytics</span>
+              </div>
+            </div>
+
+            <button onclick="navigateTo('dashboard')" class="w-full btn-premium py-3 rounded-lg mb-3 flex items-center justify-center gap-2">
+              <i data-lucide="play" style="width: 20px; height: 20px;"></i>
+              Start Learning Now
+            </button>
+            <button onclick="navigateTo('signIn')" class="w-full bg-slate-700 hover:bg-slate-600 py-3 rounded-lg flex items-center justify-center gap-2 transition">
+              <i data-lucide="log-in" style="width: 20px; height: 20px;"></i>
+              Sign In
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashboard() {
+      const config = window.elementSdk?.config || { app_title: 'VICAH Scholar' };
+      return `
+        <div class="w-full h-full p-6 slide-in">
+          <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+              <div>
+                <h1 class="text-4xl font-black gradient-text mb-1">${config.app_title}</h1>
+                <p class="text-slate-400">Welcome back, ${appState.user.name}!</p>
+              </div>
+              <button onclick="navigateTo('profile')" class="glass-effect p-0 rounded-full hover:glow-effect transition" aria-label="Profile">
+                ${appState.user.avatar ? `<img src="${appState.user.avatar}" alt="avatar" style="width:40px;height:40px;border-radius:9999px;object-fit:cover;display:block;">` : `<i data-lucide="user" style="width: 24px; height: 24px;"></i>`}
+              </button>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div class="card-premium p-4 rounded-lg">
+                <div class="text-sm text-slate-400 mb-2">Current Level</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-3xl font-black gradient-text">${appState.user.level}</span>
+                  <i data-lucide="star" style="color: #fbbf24; width: 20px; height: 20px;"></i>
+                </div>
+              </div>
+              <div class="card-premium p-4 rounded-lg">
+                <div class="text-sm text-slate-400 mb-2">Total XP</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-3xl font-black text-blue-400">${appState.user.totalXP}</span>
+                  <i data-lucide="zap" style="color: #f59e0b; width: 20px; height: 20px;"></i>
+                </div>
+              </div>
+              <div class="card-premium p-4 rounded-lg">
+                <div class="text-sm text-slate-400 mb-2">Learning Streak</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-3xl font-black text-orange-400">${appState.user.streak}</span>
+                  <i data-lucide="flame" style="color: #ef4444; width: 20px; height: 20px;"></i>
+                </div>
+              </div>
+              <div class="card-premium p-4 rounded-lg">
+                <div class="text-sm text-slate-400 mb-2">Daily Goal</div>
+                <div class="w-full bg-slate-700 rounded-full h-2 mt-2">
+                  <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style="width: ${(appState.user.dailyGoal.current / appState.user.dailyGoal.target) * 100}%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">${appState.user.dailyGoal.current}/${appState.user.dailyGoal.target} min</p>
+              </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div class="mb-8">
+              <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i data-lucide="book-open" style="color: #6366f1;"></i>
+                Choose a Course
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                ${appState.user.courses.map(course => `
+                  <button onclick="selectCourse('${course}')" class="card-premium p-6 rounded-lg text-left hover:scale-105 transition">
+                    <div class="flex justify-between items-start mb-4">
+                      <h3 class="text-lg font-bold">${course}</h3>
+                      <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-4">${(topicsByCoursae[course] || []).length} topics available</p>
+                    <div class="w-full bg-slate-700 rounded-full h-2">
+                      <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style="width: ${Math.random() * 70 + 20}%"></div>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Recent Activity & Achievements -->
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                  <i data-lucide="history" style="color: #ec4899;"></i>
+                  Recent Quizzes
+                </h2>
+                <div class="space-y-3">
+                  ${appState.user.quizzes.map(quiz => `
+                    <div class="card-premium p-4 rounded-lg flex justify-between items-center">
+                      <div>
+                        <p class="font-semibold">${quiz.course}</p>
+                        <p class="text-sm text-slate-400">${quiz.date}</p>
+                      </div>
+                      <span class="text-2xl font-bold text-green-400">${quiz.score}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                  <i data-lucide="award" style="color: #f59e0b;"></i>
+                  Achievements
+                </h2>
+                <div class="grid grid-cols-2 gap-3">
+                  ${appState.user.achievements.map(achievement => `
+                    <div class="card-premium p-4 rounded-lg text-center">
+                      <div class="achievement-badge w-12 h-12 mx-auto mb-2">
+                        <i data-lucide="trophy" style="width: 20px; height: 20px; color: white;"></i>
+                      </div>
+                      <p class="text-sm font-semibold">${achievement}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSignIn() {
+      // authFlow: 'signin' | 'signup' | 'recover'
+      return `
+        <div class="w-full h-full flex items-center justify-center p-6 slide-in">
+          <div class="max-w-md w-full">
+            <div class="text-center mb-6">
+              <h2 class="text-3xl font-bold mb-2">${authFlow === 'signup' ? 'Sign Up' : authFlow === 'recover' ? 'Recover Password' : 'Sign In'}</h2>
+              <p class="text-slate-400 text-sm">${authFlow === 'signup' ? 'Create your account' : authFlow === 'recover' ? 'Enter recovery code and new password' : 'Enter your details to continue'}</p>
+            </div>
+            <div class="card-premium p-6 rounded-lg space-y-4">
+              <div>
+                <label class="text-xs text-slate-400">Email</label>
+                <input id="signin-email" class="w-full mt-2 p-3 rounded bg-slate-800" type="email" value="${appState.user.email || ''}" />
+              </div>
+              ${authFlow === 'signup' ? `
+                <div>
+                  <label class="text-xs text-slate-400">Name</label>
+                  <input id="signin-name" class="w-full mt-2 p-3 rounded bg-slate-800" type="text" value="${appState.user.name || ''}" />
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Course</label>
+                  <select id="signin-course" class="w-full mt-2 p-3 rounded bg-slate-800">
+                    ${['Engineering','Medicine','Law','Economics','Accounting'].map(c => `<option value="${c}" ${appState.user.selectedCourse===c? 'selected':''}>${c}</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Password</label>
+                  <input id="signin-password" class="w-full mt-2 p-3 rounded bg-slate-800" type="password" value="" />
+                </div>
+              ` : authFlow === 'recover' ? `
+                <div>
+                  <label class="text-xs text-slate-400">Recovery Code</label>
+                  <input id="recover-code" class="w-full mt-2 p-3 rounded bg-slate-800" type="text" />
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">New Password</label>
+                  <input id="recover-newpass" class="w-full mt-2 p-3 rounded bg-slate-800" type="password" />
+                </div>
+              ` : `
+                <div>
+                  <label class="text-xs text-slate-400">Password</label>
+                  <input id="signin-password" class="w-full mt-2 p-3 rounded bg-slate-800" type="password" value="" />
+                </div>
+              `}
+
+              <div class="flex gap-2">
+                ${authFlow === 'signup' ? `<button onclick="signUpSubmit()" class="flex-1 btn-premium py-3 rounded-lg">Create Account</button>` : authFlow === 'recover' ? `<button onclick="completePasswordReset()" class="flex-1 btn-premium py-3 rounded-lg">Reset Password</button>` : `<button onclick="signInSubmit()" class="flex-1 btn-premium py-3 rounded-lg">Sign In</button>`}
+                <button onclick="navigateTo('welcome')" class="flex-1 bg-slate-700 py-3 rounded-lg">Cancel</button>
+              </div>
+
+              <div class="flex items-center justify-between text-sm text-slate-400 mt-2">
+                ${authFlow === 'signup' ? `<div>Already have an account? <a href="#" onclick="showSignIn();return false;" class="text-sky-400">Sign in</a></div>` : authFlow === 'recover' ? `<div>Remembered? <a href="#" onclick="showSignIn();return false;" class="text-sky-400">Sign in</a></div>` : `<div>New here? <a href="#" onclick="showSignUp();return false;" class="text-sky-400">Sign up</a></div>`}
+                ${authFlow === 'recover' ? `<button onclick="startPasswordRecovery()" class="text-xs text-slate-300 underline">Resend code</button>` : `<button onclick="startPasswordRecovery()" class="text-xs text-slate-300 underline">Forgot password?</button>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTopicSelection() {
+      const topics = topicsByCoursae[appState.user.selectedCourse] || [];
+      return `
+        <div class="w-full h-full p-6 overflow-auto slide-in">
+          <div class="max-w-6xl mx-auto">
+            <button onclick="navigateTo('dashboard')" class="mb-6 flex items-center gap-2 text-slate-400 hover:text-white transition">
+              <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+              Back to Dashboard
+            </button>
+
+            <h1 class="text-4xl font-black gradient-text mb-2">${appState.user.selectedCourse}</h1>
+            <p class="text-slate-400 mb-8">Select a topic to begin learning</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${topics.map(rawTopic => {
+                const topicName = typeof rawTopic === 'string' ? rawTopic : (rawTopic.name || 'Topic');
+                const duration = typeof rawTopic === 'string' ? '10-15' : (rawTopic.duration || '10-15');
+                const level = typeof rawTopic === 'string' ? 'Intermediate' : (rawTopic.level || 'Intermediate');
+                return `
+                <button onclick="selectTopic('${topicName}')" class="card-premium p-6 rounded-lg text-left hover:scale-105 transition group">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 glass-effect rounded-lg flex items-center justify-center group-hover:glow-effect">
+                      <i data-lucide="book" style="color: #6366f1;"></i>
+                    </div>
+                    <span class="level-badge level-${level.toLowerCase()}">${level}</span>
+                  </div>
+                  <h3 class="text-lg font-bold mb-2">${topicName}</h3>
+                  <p class="text-sm text-slate-400 mb-4">Master this essential concept</p>
+                  <div class="flex items-center gap-2 text-sm">
+                    <i data-lucide="clock" style="width: 16px; height: 16px;"></i>
+                    <span>${duration} min</span>
+                  </div>
+                </button>
+              `}).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAITutor() {
+      const sampleResponses = {
+        "What is Newton's First Law?": "Newton's First Law states that an object at rest stays at rest, and an object in motion stays in motion unless acted upon by an external force. Think of it like this: if you're sitting in a car and it suddenly stops, you lurch forward because your body wants to continue moving. This fundamental principle forms the foundation of classical mechanics!",
+        "How do I solve quadratic equations?": "Great question! Quadratic equations (ax² + bx + c = 0) can be solved using three main methods:\n\n1. **Factoring**: Break it into two binomials\n2. **Quadratic Formula**: x = (-b ± √(b²-4ac)) / 2a\n3. **Completing the Square**: Manipulate to perfect square form\n\nThe quadratic formula works for all cases!",
+        "Explain photosynthesis": "Photosynthesis is how plants convert light energy into chemical energy. It happens in two stages:\n\n**Light Reactions** (in thylakoid): Captures sunlight to split water and produce ATP + NADPH\n**Calvin Cycle** (in stroma): Uses ATP & NADPH to fix CO₂ into glucose\n\nOverall: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂",
+        "Hi": "Hi how can I help you today?",
+        "Hello": "Hi how can I help you today?",
+        "Howfar": "Hi how can I help you today?"
+      };
+
+      return `
+        <div class="w-full h-full flex flex-col slide-in">
+          <!-- Header -->
+            <div class="glass-effect p-6 border-b border-slate-700 flex justify-between items-center">
+            <div>
+              <button onclick="navigateTo('topicSelection')" class="flex items-center gap-2 text-slate-400 hover:text-white transition mb-2">
+                <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                Back
+              </button>
+              <h1 class="text-2xl font-bold">${appState.user.selectedTopic}</h1>
+              <p class="text-sm text-slate-400">${appState.user.selectedCourse}</p>
+            </div>
+            <div class="level-badge level-${(appState.user.selectedTopicLevel||'Intermediate').toLowerCase()}">${appState.user.selectedTopicLevel || 'Intermediate'}</div>
+          </div>
+
+          <!-- Chat Area -->
+          <div class="flex-1 overflow-auto p-6">
+            <div class="max-w-2xl space-y-4">
+              <div class="card-premium p-3 rounded-lg mb-4">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm font-semibold">Reference Files</div>
+                  <div>
+                    <input id="reference-input" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md,.jpg,.jpeg,.png" style="display:none;" onchange="handleReferenceUpload(event)" multiple />
+                    <button onclick="document.getElementById('reference-input').click()" class="text-xs bg-slate-700 px-3 py-1 rounded">Upload</button>
+                  </div>
+                </div>
+                <div class="mt-3 text-xs text-slate-400">
+                  ${(() => {
+                    const refs = appState.user.references || [];
+                    if (!refs.length) return '<div>No files uploaded</div>';
+                    return refs.map(r => {
+                      const isImage = r.type && r.type.startsWith('image');
+                      const sizeText = r.size ? ` (${Math.round(r.size/1024)} KB)` : '';
+                      const dateText = r.uploadedAt ? new Date(r.uploadedAt).toLocaleDateString() : '';
+                      const preview = isImage && r.dataUrl ? `<img src="${r.dataUrl}" alt="${r.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">` : `<i data-lucide="file-text" style="width:32px;height:32px;color:#94a3b8"></i>`;
+                      const snippet = r.textSnippet ? `<div class="text-xs text-slate-400 mt-1 truncate">${r.textSnippet.slice(0,120)}...</div>` : '';
+                      return `<div class="flex items-center gap-3 mb-3 reference-item" style="align-items:center;">
+                                <div style="width:52px;height:52px;flex:0 0 52px;">${preview}</div>
+                                <div class="flex-1">
+                                  <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                      <a href="${r.dataUrl || '#'}" target="_blank" class="font-medium text-sm text-white truncate">${r.name}</a>
+                                      ${r.primary ? `<span class="text-xs text-green-300 px-2 py-0.5 rounded bg-slate-800">Primary</span>` : ''}
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                      ${!r.primary ? `<button onclick="setPrimaryReference('${r.id}')" class="text-sky-400 text-xs">Set primary</button>` : ''}
+                                      <button onclick="removeReference('${r.id}')" class="text-red-400 text-xs">Remove</button>
+                                    </div>
+                                  </div>
+                                  <div class="text-xs text-slate-400">${dateText}${sizeText}</div>
+                                  ${snippet}
+                                </div>
+                              </div>`;
+                    }).join('');
+                  })()}
+                </div>
+              </div>
+              ${appState.chatHistory.map((msg, idx) => `
+                <div class="flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}">
+                  <div class="max-w-xs ${msg.sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'} p-4 rounded-lg">
+                    <p class="text-sm">${msg.text}</p>
+                    <p class="text-xs text-slate-400 mt-2">${msg.timestamp}</p>
+                    ${msg.sender === 'ai' && msg.sources && msg.sources.length ? `
+                      <div class="mt-2 text-xs text-slate-400">
+                        <div class="font-semibold mb-1">Sources</div>
+                        ${msg.sources.map(s => `<div class="mb-1"><a href="${s.url}" target="_blank" class="underline text-blue-300">${s.title}</a>${s.snippet?` — ${s.snippet}`:''}</div>`).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+              ${appState.chatHistory.length === 0 ? `
+                <div class="text-center py-12">
+                  <div class="w-16 h-16 mx-auto mb-4 glass-effect rounded-full flex items-center justify-center glow-effect">
+                    <i data-lucide="brain" style="width: 32px; height: 32px; color: #6366f1;"></i>
+                  </div>
+                  <h3 class="text-xl font-bold mb-2">AI Tutor Ready</h3>
+                  <p class="text-slate-400">Ask any question about ${appState.user.selectedTopic}</p>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <div class="glass-effect border-t border-slate-700 p-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <div class="flex gap-3">
+                ${(() => {
+                  // build quick-reply buttons based on selected course/topic
+                  const course = (appState.user.selectedCourse || '').toLowerCase();
+                  const topic = (appState.user.selectedTopic || '').toLowerCase();
+                  const btns = [];
+                  if (course.includes('physics') || topic.includes('newton') || topic.includes('kinematics')) {
+                    btns.push({ q: "What is Newton's First Law?", label: 'First Law', icon: 'help-circle' });
+                    btns.push({ q: 'Give an example of this topic', label: 'Examples', icon: 'calculator' });
+                  } else if (course.includes('biology') || topic.includes('genetic') || topic.includes('genetics')) {
+                    // Biology / Genetics quick replies
+                    btns.push({ q: 'Who is the father of genetics?', label: 'Father of Genetics', icon: 'help-circle' });
+                    btns.push({ q: 'Give an example related to genetics', label: 'Examples', icon: 'calculator' });
+                  } else if (course.includes('chemistry') || topic.includes('bond') || topic.includes('bonding')) {
+                    btns.push({ q: 'What are the types of bonding?', label: 'Types of Bonding', icon: 'help-circle' });
+                    btns.push({ q: 'Give an example of bonding', label: 'Examples', icon: 'calculator' });
+                  } else {
+                    // default quick replies
+                    btns.push({ q: "What is Newton's First Law?", label: 'First Law', icon: 'help-circle' });
+                    btns.push({ q: 'How do I solve quadratic equations?', label: 'Examples', icon: 'calculator' });
+                  }
+                  return btns.map(b => `
+                    <button onclick="askQuestion('${b.q.replace(/'/g, "\\'")}')" class="card-premium px-4 py-2 rounded-lg text-sm hover:scale-105 transition">
+                      <i data-lucide="${b.icon}" style="width: 16px; height: 16px; display: inline; margin-right: 6px;"></i>
+                      ${b.label}
+                    </button>
+                  `).join('');
+                })()}
+                <button onclick="navigateTo('quiz')" class="card-premium px-4 py-2 rounded-lg text-sm hover:scale-105 transition">
+                  <i data-lucide="quiz" style="width: 16px; height: 16px; display: inline; margin-right: 6px;"></i>
+                  Quiz
+                </button>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <input type="text" id="questionInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter'){ submitQuestion(); }" class="flex-1 glass-effect px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                <button onclick="submitQuestion()" class="btn-premium px-6 py-3 rounded-lg flex items-center gap-2">
+                  <i data-lucide="send" style="width: 20px; height: 20px;"></i>
+                  Ask
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQuiz() {
+      if (!appState.currentQuiz) {
+        appState.currentQuiz = {
+          // record which course/topic this quiz is for
+          course: appState.user.selectedCourse || 'General',
+          topic: appState.user.selectedTopic || null,
+          questions: [
+            { id: 1, text: 'What is Newton\'s First Law?', options: ['Objects stay at rest or in motion', 'Force = Mass × Acceleration', 'Energy cannot be created', 'Velocity is constant'], correct: 0, difficulty: 'easy' },
+            { id: 2, text: 'Solve: 2x + 5 = 13', options: ['x = 2', 'x = 4', 'x = 6', 'x = 8'], correct: 1, difficulty: 'easy' },
+            { id: 3, text: 'What is photosynthesis primarily used for?', options: ['Digestion', 'Converting light to chemical energy', 'Movement', 'Temperature regulation'], correct: 1, difficulty: 'medium' },
+            { id: 4, text: 'Calculate: (2³ × 3²) ÷ 6', options: ['8', '12', '16', '24'], correct: 2, difficulty: 'hard' },
+            { id: 5, text: 'What is the general solution to x² + 5x + 6 = 0?', options: ['x = -2 or -3', 'x = 2 or 3', 'x = 1 or 6', 'x = -1 or -6'], correct: 0, difficulty: 'hard' }
+          ],
+          currentQuestion: 0
+        };
+      }
+
+      const q = appState.currentQuiz.questions[appState.currentQuiz.currentQuestion];
+      const answered = appState.quizAnswers[q.id] !== undefined;
+
+      return `
+        <div class="w-full h-full flex flex-col slide-in">
+          <!-- Progress Header -->
+          <div class="glass-effect p-6 border-b border-slate-700">
+            <div class="max-w-2xl mx-auto">
+              <button onclick="navigateTo('aiTutor')" class="flex items-center gap-2 text-slate-400 hover:text-white transition mb-4">
+                <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                Back
+              </button>
+              <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Quick Quiz</h1>
+                <span class="text-sm text-slate-400">Question ${appState.currentQuiz.currentQuestion + 1}/${appState.currentQuiz.questions.length}</span>
+              </div>
+              <div class="w-full bg-slate-700 rounded-full h-2">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition" style="width: ${((appState.currentQuiz.currentQuestion + 1) / appState.currentQuiz.questions.length) * 100}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question -->
+          <div class="flex-1 flex items-center justify-center p-6">
+            <div class="max-w-2xl w-full">
+              <div class="card-premium p-8 rounded-lg mb-8">
+                <div class="flex items-center gap-3 mb-6">
+                  <span class="difficulty-${q.difficulty} font-bold text-sm uppercase">${q.difficulty}</span>
+                  <i data-lucide="star" style="width: 16px; height: 16px;"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-8">${q.text}</h2>
+
+                <div class="space-y-3">
+                  ${q.options.map((option, idx) => `
+                    <button onclick="selectAnswer(${q.id}, ${idx})" class="w-full card-premium p-4 rounded-lg text-left hover:scale-102 transition ${appState.quizAnswers[q.id] === idx ? 'ring-2 ring-purple-500' : ''}">
+                      <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full glass-effect flex items-center justify-center font-bold">
+                          ${String.fromCharCode(65 + idx)}
+                        </div>
+                        <span>${option}</span>
+                      </div>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button onclick="previousQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="flex-1 glass-effect py-3 rounded-lg hover:scale-105 transition disabled:opacity-50">
+                  <i data-lucide="arrow-left" style="width: 20px; height: 20px; display: inline; margin-right: 8px;"></i>
+                  Previous
+                </button>
+                <button onclick="nextQuestion()" class="flex-1 btn-premium py-3 rounded-lg hover:scale-105 transition">
+                  ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1 ? 'Finish' : 'Next'}
+                  <i data-lucide="arrow-right" style="width: 20px; height: 20px; display: inline; margin-left: 8px;"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProfile() {
+      const correctAnswers = Object.keys(appState.quizAnswers).filter(qId => {
+        const q = appState.currentQuiz?.questions.find(q => q.id === parseInt(qId));
+        return q && appState.quizAnswers[qId] === q.correct;
+      }).length;
+
+      return `
+        <div class="w-full h-full p-6 overflow-auto slide-in">
+          <div class="max-w-2xl mx-auto">
+            <button onclick="navigateTo('dashboard')" class="mb-6 flex items-center gap-2 text-slate-400 hover:text-white transition">
+              <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+              Back
+            </button>
+
+            <!-- Profile Header -->
+            <div class="card-premium p-8 rounded-lg mb-8 text-center">
+              <div class="w-20 h-20 mx-auto mb-4 glass-effect rounded-full flex items-center justify-center glow-effect overflow-hidden">
+                ${appState.user.avatar ? `<img src="${appState.user.avatar}" alt="avatar" style="width:80px;height:80px;object-fit:cover;display:block;">` : `<i data-lucide="user" style="width: 40px; height: 40px; color: #6366f1;"></i>`}
+              </div>
+              <div class="text-center mb-4">
+                <input id="avatar-input" type="file" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)" />
+                <button onclick="document.getElementById('avatar-input').click()" class="text-xs text-slate-300 underline">Change Photo</button>
+                <button onclick="signOut()" class="text-xs text-red-400 underline ml-3">Sign Out</button>
+              </div>
+              <h1 class="text-3xl font-black mb-2">${appState.user.name}</h1>
+              <p class="text-slate-400 mb-6">AI Learning Enthusiast</p>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="glass-effect p-3 rounded-lg">
+                  <div class="text-2xl font-black gradient-text">Level ${appState.user.level}</div>
+                  <p class="text-xs text-slate-400">Rank</p>
+                </div>
+                <div class="glass-effect p-3 rounded-lg">
+                  <div class="text-2xl font-black text-blue-400">${appState.user.totalXP}</div>
+                  <p class="text-xs text-slate-400">Total XP</p>
+                </div>
+                <div class="glass-effect p-3 rounded-lg">
+                  <div class="text-2xl font-black text-orange-400">${appState.user.streak}</div>
+                  <p class="text-xs text-slate-400">Streak</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid md:grid-cols-2 gap-4 mb-8">
+              <div class="card-premium p-6 rounded-lg">
+                <h3 class="font-bold mb-4 flex items-center gap-2">
+                  <i data-lucide="target" style="color: #ec4899;"></i>
+                  Top Strengths
+                </h3>
+                <div class="space-y-2">
+                  ${appState.user.strengths.map(s => `
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="check-circle" style="color: #10b981; width: 16px; height: 16px;"></i>
+                      <span class="text-sm">${s}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="card-premium p-6 rounded-lg">
+                <h3 class="font-bold mb-4 flex items-center gap-2">
+                  <i data-lucide="alert-circle" style="color: #f59e0b;"></i>
+                  Areas to Improve
+                </h3>
+                <div class="space-y-2">
+                  ${appState.user.weaknesses.map(w => `
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="arrow-up" style="color: #f59e0b; width: 16px; height: 16px;"></i>
+                      <span class="text-sm">${w}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="card-premium p-6 rounded-lg">
+              <h3 class="font-bold mb-4 flex items-center gap-2">
+                <i data-lucide="ranking" style="color: #fbbf24;"></i>
+                Global Leaderboard
+              </h3>
+              <div class="space-y-3">
+                ${[
+                  { rank: 1, name: 'Onyia Collins', xp: 2450, streak: 15 },
+                  { rank: 2, name: 'Attah Anthony', xp: 2380, streak: 12 },
+                  { rank: 3, name: 'You', xp: appState.user.totalXP, streak: appState.user.streak, highlight: true },
+                  { rank: 4, name: 'Abonyi Fortune', xp: 1950, streak: 8 },
+                  { rank: 5, name: 'Nzewi Hyacinth', xp: 1800, streak: 5 }
+                ].map(entry => `
+                  <div class="flex items-center gap-3 p-3 ${entry.highlight ? 'ring-2 ring-purple-500 rounded-lg' : ''}">
+                    <span class="leaderboard-rank" style="width: 30px;">#${entry.rank}</span>
+                    <div class="flex-1">
+                      <p class="font-semibold">${entry.name}</p>
+                      <p class="text-xs text-slate-400">${entry.xp} XP • ${entry.streak} day streak</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Navigation & Helpers
+    function navigateTo(screen) {
+      // if leaving study screen, end session and award XP
+      if (appState.currentScreen === 'aiTutor') {
+        endStudySession();
+      }
+      appState.currentScreen = screen;
+      // if entering aiTutor, start session
+      if (screen === 'aiTutor') startStudySession();
+      // update daily streak when navigating
+      updateDailyStreak();
+      render();
+      lucide.createIcons();
+    }
+
+    function selectCourse(course) {
+      appState.user.selectedCourse = course;
+      navigateTo('topicSelection');
+    }
+
+    function selectTopic(topic) {
+      appState.user.selectedTopic = topic;
+      // determine and store the selected topic's level (Easy/Intermediate/Hard)
+      const topics = topicsByCoursae[appState.user.selectedCourse] || [];
+      const found = topics.find(t => (typeof t === 'string' ? t === topic : (t.name === topic)));
+      appState.user.selectedTopicLevel = (found && typeof found !== 'string') ? (found.level || 'Intermediate') : 'Intermediate';
+      appState.chatHistory = [];
+      navigateTo('aiTutor');
+    }
+
+    function askQuestion(question) {
+      const input = document.getElementById('questionInput');
+      if (input) {
+        input.value = question;
+        input.focus();
+      }
+    }
+
+    // Sign-in handler (validates against stored users)
+    function signInSubmit() {
+      const email = document.getElementById('signin-email')?.value.trim().toLowerCase() || '';
+      const password = document.getElementById('signin-password')?.value || '';
+      if (!email || !password) { showToast('Enter email and password', 'warn'); return; }
+      const store = loadUserStore();
+      const user = store[email];
+      if (!user) {
+        showToast('No account found. Please sign up.', 'warn');
+        authFlow = 'signup'; render();
+        return;
+      }
+      if (user.password !== password) { showToast('Wrong password', 'warn'); return; }
+      // successful sign-in
+      appState.user = Object.assign(appState.user || {}, user);
+      appState.user.email = email;
+      appState.user.password = password;
+      saveState();
+      // update streak on sign-in (counts as opening the app while signed in)
+      try { updateDailyStreak(); } catch (e) {}
+      showToast('Signed in successfully', 'success');
+      navigateTo('dashboard');
+    }
+
+    // Sign-up handler
+    function signUpSubmit() {
+      const email = document.getElementById('signin-email')?.value.trim().toLowerCase() || '';
+      const name = document.getElementById('signin-name')?.value || '';
+      const course = document.getElementById('signin-course')?.value || null;
+      const password = document.getElementById('signin-password')?.value || '';
+      if (!email || !password || !name) { showToast('Please enter name, email and password', 'warn'); return; }
+      const store = loadUserStore();
+      if (store[email]) { showToast('Account exists. Please sign in.', 'warn'); authFlow = 'signin'; render(); return; }
+      const newUser = Object.assign({}, appState.user, { name, email, password, selectedCourse: course, quizzes: [], quizArchive: [] });
+      store[email] = newUser;
+      saveUserStore(store);
+      appState.user = newUser;
+      saveState();
+      // treat sign-up as an active day
+      try { updateDailyStreak(); } catch (e) {}
+      showToast('Account created and signed in', 'success');
+      navigateTo('dashboard');
+    }
+
+    // Password recovery: generate code and store temporarily; (email sending handled elsewhere)
+    async function startPasswordRecovery() {
+      const email = document.getElementById('signin-email')?.value.trim().toLowerCase() || '';
+      if (!email) { showToast('Enter your email to recover password', 'warn'); return; }
+      const store = loadUserStore();
+      const user = store[email];
+      if (!user) { showToast('No account found for that email', 'warn'); return; }
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      user.__recovery = { code, expires: Date.now() + (15 * 60 * 1000) };
+      store[email] = user; saveUserStore(store);
+      recoverEmail = email; authFlow = 'recover'; render();
+      // attempt to send via configured provider if available
+      try {
+        if (typeof sendRecoveryEmail === 'function') {
+          const ok = await sendRecoveryEmail(email, code);
+          if (ok) { showToast('Recovery code sent to your email', 'info'); return; }
+        }
+      } catch (e) { console.error('sendRecoveryEmail error', e); }
+      // fallback: log code
+      console.log('Recovery code for', email, 'is', code);
+      showToast('Recovery code logged to console (no email configured)', 'info');
+    }
+
+    function completePasswordReset() {
+      const code = document.getElementById('recover-code')?.value?.trim() || '';
+      const newPass = document.getElementById('recover-newpass')?.value || '';
+      const email = document.getElementById('signin-email')?.value.trim().toLowerCase() || recoverEmail;
+      if (!email || !code || !newPass) { showToast('Enter code and new password', 'warn'); return; }
+      const store = loadUserStore();
+      const user = store[email];
+      if (!user || !user.__recovery) { showToast('No recovery requested for that email', 'warn'); return; }
+      if (user.__recovery.expires < Date.now()) { showToast('Recovery code expired', 'warn'); return; }
+      if (user.__recovery.code !== code) { showToast('Invalid recovery code', 'warn'); return; }
+      user.password = newPass; delete user.__recovery; store[email] = user; saveUserStore(store);
+      showToast('Password updated. You can now sign in.', 'success'); authFlow = 'signin'; render();
+    }
+
+    function showSignUp() { authFlow = 'signup'; render(); }
+    function showSignIn() { authFlow = 'signin'; render(); }
+
+    // Sign-out handler: persist then clear credentials
+    function signOut() {
+      try { saveCurrentUserToStore(); } catch (e) {}
+      appState.user.email = '';
+      appState.user.password = '';
+      saveState();
+      showToast('Signed out', 'info');
+      navigateTo('welcome');
+    }
+
+    // Avatar upload handler
+    function handleAvatarUpload(e) {
+      const file = e?.target?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        appState.user.avatar = ev.target.result;
+        saveState();
+        showToast('Profile photo updated', 'success');
+        render();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Chat helper: push message and keep only last 30 messages
+    function pushChatMessage(message) {
+      appState.chatHistory = appState.chatHistory || [];
+      appState.chatHistory.push(message);
+      // keep last 30 messages
+      if (appState.chatHistory.length > 30) {
+        appState.chatHistory = appState.chatHistory.slice(appState.chatHistory.length - 30);
+      }
+      saveState();
+    }
+
+    // Reference upload handler
+    function handleReferenceUpload(e) {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      appState.user.references = appState.user.references || [];
+      files.forEach(file => {
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+        const reader = new FileReader();
+        // For text files, read text to extract snippet
+        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        if (isPdf) {
+          // handle PDFs: extract text (first pages) using pdf.js if available
+          const makePrimary = (appState.user.references.length === 0);
+          const uploadedAt = new Date().toISOString();
+          file.arrayBuffer().then(async (ab) => {
+            try {
+              await loadPdfJs();
+              const snippet = await extractPdfText(ab, 2);
+              const dataUrl = URL.createObjectURL(file);
+              appState.user.references.push({ id, name: file.name, type: 'pdf', size: file.size || 0, dataUrl, textSnippet: snippet || '', uploadedAt, primary: makePrimary });
+            } catch (err) {
+              // fallback: store without snippet
+              const dataUrl = URL.createObjectURL(file);
+              appState.user.references.push({ id, name: file.name, type: 'pdf', size: file.size || 0, dataUrl, textSnippet: null, uploadedAt, primary: makePrimary });
+            }
+            saveState(); render();
+          }).catch(() => {
+            const dataUrl = URL.createObjectURL(file);
+            const makePrimary2 = (appState.user.references.length === 0);
+            appState.user.references.push({ id, name: file.name, type: 'pdf', size: file.size || 0, dataUrl, textSnippet: null, uploadedAt: new Date().toISOString(), primary: makePrimary2 });
+            saveState(); render();
+          });
+          return;
+        }
+
+        if (file.type.startsWith('text') || file.name.endsWith('.md') || file.name.endsWith('.txt')) {
+          reader.onload = function(ev) {
+            const text = ev.target.result || '';
+            const snippet = text.slice(0, 400).replace(/\n+/g, ' ');
+            // mark as primary if this is the first uploaded file
+            const makePrimary = (appState.user.references.length === 0);
+            appState.user.references.push({ id, name: file.name, type: file.type || 'text', size: file.size || 0, dataUrl: null, textSnippet: snippet, uploadedAt: new Date().toISOString(), primary: makePrimary });
+            saveState(); render();
+          };
+          reader.readAsText(file);
+        } else {
+          reader.onload = function(ev) {
+            const dataUrl = ev.target.result;
+            const makePrimary = (appState.user.references.length === 0);
+            appState.user.references.push({ id, name: file.name, type: file.type || 'binary', size: file.size || 0, dataUrl, textSnippet: null, uploadedAt: new Date().toISOString(), primary: makePrimary });
+            saveState(); render();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      // reset input
+      e.target.value = '';
+    }
+
+    function removeReference(id) {
+      const before = appState.user.references || [];
+      appState.user.references = before.filter(r => r.id !== id);
+      // if removed reference was primary, promote the first one
+      const hadPrimary = before.find(r => r.id === id && r.primary);
+      if (hadPrimary && appState.user.references.length) {
+        appState.user.references[0].primary = true;
+      }
+      saveState(); render();
+    }
+
+    function setPrimaryReference(id) {
+      appState.user.references = appState.user.references || [];
+      appState.user.references.forEach(r => r.primary = (r.id === id));
+      saveState(); render();
+    }
+
+    // Persona rules: guide the AI to stay on-topic for a given course/topic
+    const personaRules = [
+      {
+        match: (course, topic) => (course||'').toLowerCase().includes('physics') && (topic||'').toLowerCase().includes('kinemat'),
+        persona: `You are a physics professor specializing in kinematics. Your role is to provide clear explanations of concepts like displacement, velocity, and acceleration, and to answer user questions exclusively within the framework of kinematics. Avoid bringing in concepts from other physics topics unless explicitly connected to the current discussion.`
+      },
+      {
+        match: (course, topic) => (course||'').toLowerCase().includes('biology') && (topic||'').toLowerCase().includes('genetic'),
+        persona: `You are a genetics expert. Answer questions focused on genetics; avoid unrelated biology topics unless directly relevant.`
+      }
+    ];
+
+    function getPersonaForContext() {
+      const course = appState.user.selectedCourse || '';
+      const topic = appState.user.selectedTopic || '';
+      for (const p of personaRules) {
+        try { if (p.match(course, topic)) return p.persona; } catch (e) {}
+      }
+      // default short guidance to stay on topic
+      return `Answer the question focusing only on the current topic (${topic || course || 'General'}). Do not divert to unrelated subjects unless explicitly requested.`;
+    }
+
+    // PDF.js loader and extractor (used to pull text from uploaded PDFs)
+    function loadPdfJs() {
+      return new Promise((resolve, reject) => {
+        if (window.pdfjsLib) return resolve(window.pdfjsLib);
+        const url = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
+        const workerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = () => {
+          try {
+            if (window.pdfjsLib) {
+              window.pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
+            }
+            resolve(window.pdfjsLib);
+          } catch (e) { resolve(window.pdfjsLib); }
+        };
+        s.onerror = () => reject(new Error('Failed to load pdfjs'));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function extractPdfText(arrayBuffer, maxPages = 2) {
+      try {
+        const pdfjs = window.pdfjsLib;
+        if (!pdfjs) return '';
+        const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        const pageCount = Math.min(pdf.numPages, maxPages);
+        let fullText = '';
+        for (let i = 1; i <= pageCount; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map(it => it.str).join(' ');
+          fullText += pageText + '\n\n';
+        }
+        return fullText.trim();
+      } catch (e) {
+        console.error('extractPdfText error', e);
+        return '';
+      }
+    }
+
+    
+
+    async function generateSourceLinks(query) {
+      const links = [];
+      let wikiSummary = '';
+      try {
+        // Try Wikipedia first (opensearch)
+        const wikiResp = await fetch('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + encodeURIComponent(query) + '&limit=1&namespace=0&format=json&origin=*');
+        if (wikiResp.ok) {
+          const data = await wikiResp.json();
+          if (data && data[1] && data[1].length) {
+            const title = data[1][0];
+            const pageUrl = data[3] && data[3][0] ? data[3][0] : ('https://en.wikipedia.org/wiki/' + encodeURIComponent(title));
+            let snippet = '';
+            try {
+              const sum = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title));
+              if (sum.ok) {
+                const sumData = await sum.json();
+                snippet = sumData.extract || '';
+                wikiSummary = snippet;
+              }
+            } catch (e) {}
+            links.push({ title: 'Wikipedia: ' + title, url: pageUrl, snippet });
+          }
+        }
+      } catch (e) {}
+
+      // Generic search links
+      links.push({ title: 'Google Search', url: 'https://www.google.com/search?q=' + encodeURIComponent(query) });
+      links.push({ title: 'Twitter Search', url: 'https://twitter.com/search?q=' + encodeURIComponent(query) });
+      links.push({ title: 'Facebook Search', url: 'https://www.facebook.com/search/top?q=' + encodeURIComponent(query) });
+      links.push({ title: 'Reddit Search', url: 'https://www.reddit.com/search/?q=' + encodeURIComponent(query) });
+      return { links, wikiSummary };
+    }
+
+    function submitQuestion() {
+      const input = document.getElementById('questionInput');
+      const question = input.value.trim();
+      if (!question) return;
+
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      pushChatMessage({ sender: 'user', text: question, timestamp: now });
+
+      setTimeout(() => {
+        const sampleResponses = {
+          "What is Newton's First Law?": "Newton's First Law states that an object at rest stays at rest, and an object in motion stays in motion unless acted upon by an external force. This is also known as the law of inertia!",
+          "How do I solve quadratic equations?": "Quadratic equations can be solved using: 1) Factoring, 2) Quadratic Formula (x = -b ± √(b²-4ac)/2a), or 3) Completing the Square.",
+          "Explain photosynthesis": "Photosynthesis is how plants convert light energy into chemical energy (glucose). It occurs in two stages: Light Reactions and Calvin Cycle.",
+            "Hi": "Hi how can I help you today?",
+            "Hello": "Hi how can I help you today?",
+            "Howfar": "Hi how can I help you today?"
+        };
+
+        // topic-specific shortcuts
+        function topicShortcutResponse(questionText, topic) {
+          if (!topic) return null;
+          const q = questionText.toLowerCase();
+          const t = topic.toLowerCase();
+          // Physics: Newton's Laws
+          if (t.includes('newton') || t.includes("physics") || t.includes('kinematics')) {
+            if (q.includes('first law') || q.includes("newton's first")) return "Newton's First Law: an object at rest stays at rest and an object in motion stays in motion unless acted upon by a net external force (law of inertia).";
+            if (q.includes('example')) return "Example: A book on a table stays put until you push it; a rolling ball slows due to friction.";
+          }
+          // Biology: Genetics
+          if (t.includes('genetic') || t.includes('genetics') || t.includes('biology')) {
+            if (q.includes('father') || q.includes('father of genetics') || q.includes('who')) return "Gregor Mendel is widely known as the father of genetics for his work with pea plants demonstrating inheritance patterns.";
+            if (q.includes('dna') || q.includes('gene')) return "Genes are units of heredity made of DNA that code for traits.";
+            if (q.includes('example')) return "Example: Mendel's pea-plant experiments demonstrated dominant and recessive inheritance patterns (e.g., tall vs short plants).";
+          }
+          // Chemistry: Bonding
+          if (t.includes('bond') || t.includes('chemistry')) {
+            if (q.includes('type') || q.includes('types') || q.includes('what types')) return "Types of chemical bonding: ionic, covalent, metallic, and hydrogen bonding — each has distinct electron sharing/transferring behavior.";
+            if (q.includes('ionic') || q.includes('covalent')) return "Ionic bonds form between oppositely charged ions; covalent bonds form when atoms share electron pairs.";
+            if (q.includes('example')) return "Example: NaCl (ionic bond) forms from Na+ and Cl-; H2O has polar covalent bonds between H and O.";
+          }
+
+          return null;
+        }
+
+        (async () => {
+          const topicResp = topicShortcutResponse(question, appState.user.selectedTopic || appState.currentQuiz?.topic);
+          const response = topicResp || sampleResponses[question] || `That's a great question about ${appState.user.selectedTopic || 'this topic'}! Let me break it down for you...`;
+          let sources = [];
+          let wikiSummary = '';
+          try {
+            const res = await generateSourceLinks(question);
+            sources = res.links || [];
+            wikiSummary = res.wikiSummary || '';
+          } catch (e) { console.error('generateSourceLinks error', e); }
+
+          // include any user-uploaded reference files as sources (prepend)
+          const refs = (appState.user.references || []).slice();
+          if (refs.length) {
+            // sort so primary comes first
+            refs.sort((a,b) => (b.primary ? 1 : 0) - (a.primary ? 1 : 0));
+            const refSources = refs.map(r => ({ title: (r.primary ? 'Primary file: ' : 'User file: ') + r.name, url: r.dataUrl || '#', snippet: r.textSnippet || 'User-provided file' }));
+            sources = refSources.concat(sources);
+          }
+
+          // Prefer quoting primary user file snippet if available, otherwise use Wikipedia summary
+          let finalResponse = response;
+          const primarySource = sources.find(s => s.title && s.title.toLowerCase().startsWith('primary file') && s.snippet);
+          if (primarySource && primarySource.snippet) {
+            const sentences = primarySource.snippet.split('.').map(s => s.trim()).filter(Boolean);
+            const quote = sentences.slice(0,2).join('. ');
+            if (topicResp) {
+              finalResponse = `${topicResp}\n\nAccording to your slide: "${quote}."`;
+            } else {
+              finalResponse = `According to your slide: "${quote}."\n\n(Quoted from your uploaded file)\n\nIf you'd like, I can expand or explain this further.`;
+            }
+          } else if (wikiSummary) {
+            const sentences = wikiSummary.split('.').map(s => s.trim()).filter(Boolean);
+            const quote = sentences.slice(0,2).join('. ');
+            if (topicResp) {
+              finalResponse = `${topicResp}\n\n"${quote}."\n\n(Source: Wikipedia)`;
+            } else {
+              finalResponse = `"${quote}."\n\n(Summarized from Wikipedia)\n\n${sentences.slice(2,4).join('. ')}\n\nFor context: I can expand on this with examples or step-by-step explanations.`;
+            }
+          }
+
+          finalResponse = topicResp || finalResponse || (sampleResponses[question] || `That's a great question about ${appState.user.selectedTopic || 'this topic'}! Let me break it down for you...`);
+
+          pushChatMessage({ sender: 'ai', text: finalResponse, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), sources });
+          input.value = '';
+          saveState();
+          render();
+          lucide.createIcons();
+        })();
+      }, 600);
+    }
+
+    function selectAnswer(qId, optionIdx) {
+      appState.quizAnswers[qId] = optionIdx;
+      render();
+    }
+
+    function nextQuestion() {
+      if (appState.currentQuiz.currentQuestion < appState.currentQuiz.questions.length - 1) {
+        appState.currentQuiz.currentQuestion++;
+      } else {
+        const correct = Object.keys(appState.quizAnswers).filter(qId => {
+          const q = appState.currentQuiz.questions.find(q => q.id === parseInt(qId));
+          return q && appState.quizAnswers[qId] === q.correct;
+        }).length;
+        alert(`Quiz Complete! You scored ${correct}/${appState.currentQuiz.questions.length} (${Math.round((correct / appState.currentQuiz.questions.length) * 100)}%)`);
+        // award XP for quiz performance: 10 XP per correct answer
+        const xpForQuiz = correct * 10;
+        appState.user.totalXP = (appState.user.totalXP || 0) + xpForQuiz;
+        showToast(`${xpForQuiz} XP earned from quiz`, 'success');
+        // record quiz with course/topic
+        appState.user.quizzes = appState.user.quizzes || [];
+        const quizCourse = appState.currentQuiz.course || appState.user.selectedCourse || 'General';
+        const quizTopic = appState.currentQuiz.topic || appState.user.selectedTopic || null;
+        appState.user.quizzes.push({ course: quizCourse, topic: quizTopic, score: Math.round((correct / appState.currentQuiz.questions.length) * 100), date: new Date().toISOString().slice(0,10) });
+        // mark topic completed if applicable
+        if (quizTopic) {
+          appState.user.completedTopics = appState.user.completedTopics || [];
+          if (!appState.user.completedTopics.includes(quizTopic)) appState.user.completedTopics.push(quizTopic);
+        }
+        appState.currentQuiz = null;
+        appState.quizAnswers = {};
+        saveState();
+        navigateTo('aiTutor');
+      }
+      render();
+    }
+
+    function previousQuestion() {
+      if (appState.currentQuiz.currentQuestion > 0) {
+        appState.currentQuiz.currentQuestion--;
+        render();
+      }
+    }
+
+    function render() {
+      const screens = {
+        welcome: renderWelcome,
+        dashboard: renderDashboard,
+        signIn: renderSignIn,
+        topicSelection: renderTopicSelection,
+        aiTutor: renderAITutor,
+        quiz: renderQuiz,
+        profile: renderProfile
+      };
+
+      document.getElementById('app').innerHTML = screens[appState.currentScreen]?.() || renderWelcome();
+      lucide.createIcons();
+    }
+
+    // Toast helper
+    function showToast(message, type = 'info', timeout = 3500) {
+      try {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><div>${message}</div><div class="close">✕</div></div>`;
+        container.appendChild(t);
+        // force reflow then show
+        requestAnimationFrame(() => t.classList.add('show'));
+        const remove = () => {
+          t.classList.remove('show');
+          setTimeout(() => { try { container.removeChild(t); } catch (e) {} }, 240);
+        };
+        const timer = setTimeout(remove, timeout);
+        t.querySelector('.close').addEventListener('click', () => { clearTimeout(timer); remove(); });
+      } catch (e) { console.error('showToast error', e); }
+    }
+
+    render();
+  </script>
+  <script>
+    // ensure session ends when the user closes or reloads the page
+    window.addEventListener('beforeunload', () => {
+      try { endStudySession(); } catch (e) {}
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a098304fc94599c3',t:'MTc4MTA5MjU0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
